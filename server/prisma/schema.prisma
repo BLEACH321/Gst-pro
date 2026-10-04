@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      String    @default("business_user") // "business_user", "admin"
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  business   Business?
+  customers  Customer[]
+  products   Product[]
+  invoices   Invoice[]
+  auditLogs  AuditLog[]
+}
+
+model Business {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName     String
+  gstin            String
+  businessCategory String
+  registrationType String   @default("Regular")
+  state            String
+  address          String
+  email            String
+  phone            String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  invoices         Invoice[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  gstin     String?
+  state     String
+  address   String?
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  category    String
+  hsnSac      String
+  gstRate     Float
+  price       Float
+  unit        String   @default("PCS")
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Invoice {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessId      String?
+  business        Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  invoiceNumber   String
+  invoiceDate     DateTime @default(now())
+  customerName    String
+  customerGstin   String?
+  customerState   String
+  customerAddress String?
+  
+  subtotal        Float
+  discount        Float    @default(0)
+  taxableAmount   Float
+  cgst            Float    @default(0)
+  sgst            Float    @default(0)
+  igst            Float    @default(0)
+  totalGst        Float
+  grandTotal      Float
+  
+  status          String   @default("DRAFT") // DRAFT, VALIDATED, FINALIZED, CANCELLED
+  riskLevel       String   @default("VALID") // VALID, WARNING, POTENTIAL_RISK
+  riskScore       Float    @default(0)
+  isInterState    Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  items           InvoiceItem[]
+  validationRules ValidationResult[]
+  anomalyResult   AnomalyResult?
+}
+
+model InvoiceItem {
+  id            String   @id @default(cuid())
+  invoiceId     String
+  invoice       Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  productId     String?
+  productName   String
+  hsnSac        String
+  quantity      Float
+  unitPrice     Float
+  discount      Float    @default(0)
+  taxableAmount Float
+  gstRate       Float
+  cgst          Float    @default(0)
+  sgst          Float    @default(0)
+  igst          Float    @default(0)
+  total         Float
+}
+
+model ValidationRule {
+  id            String   @id @default(cuid())
+  ruleId        String   @unique
+  ruleName      String
+  description   String
+  category      String   // "STRUCTURE", "TAX_CALCULATION", "GST_COMPLIANCE", "BUSINESS_LOGIC"
+  severity      String   // "ERROR", "WARNING", "INFO"
+  isEnabled     Boolean  @default(true)
+  conditionType String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ValidationResult {
+  id              String   @id @default(cuid())
+  invoiceId       String
+  invoice         Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  ruleId          String
+  ruleName        String
+  status          String   // "PASS", "FAIL", "WARNING"
+  severity        String   // "ERROR", "WARNING", "INFO"
+  message         String
+  suggestedAction String?
+  createdAt       DateTime @default(now())
+}
+
+model AnomalyResult {
+  id                   String   @id @default(cuid())
+  invoiceId            String   @unique
+  invoice              Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  anomalyScore         Float
+  isAnomaly            Boolean  @default(false)
+  riskLevel            String   // "VALID", "WARNING", "POTENTIAL_RISK"
+  explanation          String
+  featureContributions String   // JSON string of feature weights / importances
+  suggestedActions     String   // JSON string of recommended action bullet points
+  createdAt            DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String
+  entityId   String?
+  details    String?
+  createdAt  DateTime @default(now())
+}

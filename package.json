@@ -1,0 +1,23 @@
+{
+  "name": "gst-sahayak-monorepo",
+  "version": "1.0.0",
+  "description": "GST Sahayak - Hybrid Rule-Based and Explainable AI GST Invoice Pre-Validation & Anomaly Detection System",
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "train:ai": "py ai_engine/anomaly_detector.py --train"
+  },
+  "keywords": [
+    "gst",
+    "invoice-validation",
+    "explainable-ai",
+    "anomaly-detection",
+    "isolation-forest",
+    "react",
+    "express",
+    "prisma"
+  ],
+  "author": "Sunny Gupta",
+  "license": "ISC"
+}
