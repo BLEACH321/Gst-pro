@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Logo3D } from "../components/common/Logo3D";
 import {
   Sparkles,
   ArrowRight,
@@ -63,16 +64,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onLogin 
         <div className="max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-between">
           {/* Logo */}
           <div
-            className="flex items-center gap-2.5 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer group"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            {/* Teal Hexagon Icon */}
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#00A878] to-[#00E599] flex items-center justify-center text-[#070e17] shadow-[0_0_20px_rgba(0,229,153,0.35)]">
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
-              </svg>
-            </div>
-            <span className="font-black text-lg text-white tracking-tight uppercase">
+            {/* 3D Rotating Logo Model */}
+            <Logo3D size="sm" />
+            <span className="font-black text-lg text-white tracking-tight uppercase group-hover:text-[#00E599] transition-colors">
               GSTSAHAYAK
             </span>
           </div>

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
+import { Logo3D } from "../common/Logo3D";
 
 interface SidebarProps {
   currentTab: string;
@@ -72,13 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Minimalist Logo Header */}
         <div className="p-6 border-b border-white/5 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => onSelectTab("dashboard")}>
-            <motion.div
-              whileHover={{ rotate: 10, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center font-black text-base shadow-[0_0_25px_rgba(255,255,255,0.3)] tracking-tighter"
-            >
-              GS
-            </motion.div>
+            <Logo3D size="md" />
             <div>
               <div className="flex items-center gap-1.5">
                 <h1 className="font-black text-white text-sm tracking-tight uppercase group-hover:text-[#00E599] transition-colors">

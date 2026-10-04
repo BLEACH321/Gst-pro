@@ -14,6 +14,7 @@ import { AdminRules } from "./pages/AdminRules";
 import { LandingPage } from "./pages/LandingPage";
 import { AuthenticatedAgentWorkspace } from "./components/agent/AuthenticatedAgentWorkspace";
 import { ToastContainer, ToastMessage } from "./components/common/Toast";
+import { Logo3D } from "./components/common/Logo3D";
 
 const MainApp: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -39,12 +40,12 @@ const MainApp: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center text-white font-sans">
-        <div className="w-12 h-12 rounded-2xl bg-white text-[#07111F] flex items-center justify-center font-black text-xl mb-4 animate-bounce">
-          GS
+      <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center text-white font-sans gap-4">
+        <Logo3D size="lg" />
+        <div className="text-center">
+          <h2 className="text-base font-black uppercase tracking-tight">GSTSAHAYAK</h2>
+          <p className="text-xs text-zinc-400 mt-1 font-mono">Initializing Agentic Workspace & Rule Engine...</p>
         </div>
-        <h2 className="text-base font-black uppercase tracking-tight">GSTSAHAYAK</h2>
-        <p className="text-xs text-zinc-400 mt-1 font-mono">Initializing Agentic Workspace & Rule Engine...</p>
       </div>
     );
   }

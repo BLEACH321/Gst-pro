@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Logo3D } from "../components/common/Logo3D";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -147,17 +148,9 @@ export const Login: React.FC<LoginProps> = ({ onBackToLanding }) => {
           onClick={onBackToLanding}
           title="Back to Landing Page"
         >
-          <motion.div
-            whileHover={{ scale: 1.08, rotate: 6 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00A878] to-[#00E599] flex items-center justify-center text-[#070e17] shadow-[0_0_25px_rgba(0,229,153,0.45)]"
-          >
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
-            </svg>
-          </motion.div>
+          <Logo3D size="md" />
           <div className="flex flex-col">
-            <span className="font-black text-xl text-white tracking-tight uppercase leading-none">
+            <span className="font-black text-xl text-white tracking-tight uppercase leading-none group-hover:text-[#00E599] transition-colors">
               GSTSAHAYAK
             </span>
             <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mt-0.5">
