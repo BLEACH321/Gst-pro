@@ -83,27 +83,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Subtle Ambient Radial Glow inside the Dock */}
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#00E599]/15 via-[#00A878]/5 to-transparent rounded-t-[28px] pointer-events-none" />
 
-        {/* Circular Morphing Toggle Pin Button on the Right Rim */}
-        <motion.button
-          onClick={onToggleCollapse}
-          whileHover={{ scale: 1.18 }}
-          whileTap={{ scale: 0.9 }}
-          className="hidden lg:flex absolute -right-3.5 top-7 z-50 w-7 h-7 rounded-full bg-[#151722] hover:bg-[#1c1f2e] border border-[#00E599]/50 text-[#00E599] items-center justify-center shadow-[0_0_15px_rgba(0,229,153,0.35)] cursor-pointer"
-          title={isCollapsed ? "Expand Sidebar (⌘B)" : "Collapse Sidebar (⌘B)"}
-        >
-          <motion.div
-            animate={{ rotate: isCollapsed ? 180 : 0 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          >
-            <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-          </motion.div>
-        </motion.button>
-
         {/* Header: 3D Rotating Model Brand */}
-        <div className="p-4 border-b border-white/5 flex items-center justify-center relative z-10 min-h-[72px]">
+        <div className="p-4 border-b border-white/5 flex items-center justify-between relative z-10 min-h-[72px]">
           <div
             className="flex items-center gap-3 cursor-pointer group w-full overflow-hidden"
-            onClick={() => onSelectTab("dashboard")}
+            onClick={() => {
+              if (isCollapsed) {
+                onToggleCollapse();
+              } else {
+                onSelectTab("dashboard");
+              }
+            }}
+            title={isCollapsed ? "Click to Expand Sidebar" : "Go to Dashboard"}
           >
             {/* Centered 3D Rotating Logo */}
             <div className="shrink-0 flex items-center justify-center mx-auto lg:mx-0">
@@ -118,18 +109,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   animate={{ opacity: 1, x: 0, width: "auto" }}
                   exit={{ opacity: 0, x: -10, width: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="min-w-0 flex-1 overflow-hidden"
+                  className="min-w-0 flex-1 flex items-center justify-between overflow-hidden"
                 >
-                  <div className="flex items-center gap-1.5">
-                    <h1 className="font-black text-white text-sm tracking-tight uppercase group-hover:text-[#00E599] transition-colors truncate">
-                      GST Sahayak
-                    </h1>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] shadow-[0_0_8px_#00E599] shrink-0" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h1 className="font-black text-white text-sm tracking-tight uppercase group-hover:text-[#00E599] transition-colors truncate">
+                        GST Sahayak
+                      </h1>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] shadow-[0_0_8px_#00E599] shrink-0" />
+                    </div>
+                    <p className="text-[9px] text-[#00E599] font-mono font-bold uppercase tracking-wider truncate flex items-center gap-1">
+                      <Radio className="w-2.5 h-2.5 animate-pulse" />
+                      Protocol v2.4
+                    </p>
                   </div>
-                  <p className="text-[9px] text-[#00E599] font-mono font-bold uppercase tracking-wider truncate flex items-center gap-1">
-                    <Radio className="w-2.5 h-2.5 animate-pulse" />
-                    Protocol v2.4
-                  </p>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleCollapse();
+                    }}
+                    className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
+                    title="Collapse sidebar (⌘B)"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
