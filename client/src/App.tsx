@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Sidebar } from "./components/layout/Sidebar";
 import { Navbar } from "./components/layout/Navbar";
@@ -20,13 +20,36 @@ const MainApp: React.FC = () => {
   const { user, isLoading } = useAuth();
   const [viewMode, setViewMode] = useState<"landing" | "app" | "login">("landing");
   const [currentTab, setCurrentTab] = useState("dashboard");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(
-    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
-  );
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [agentPanelCollapsed, setAgentPanelCollapsed] = useState(true);
   const [globalSearch, setGlobalSearch] = useState("");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [syncedWorkspaceState, setSyncedWorkspaceState] = useState<any>(null);
+
+  // Keyboard shortcut: Ctrl+B or Cmd+B to toggle collapse
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        if (window.innerWidth < 1024) {
+          setIsMobileOpen((prev) => !prev);
+        } else {
+          setIsCollapsed((prev) => !prev);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleToggleSidebar = () => {
+    if (window.innerWidth < 1024) {
+      setIsMobileOpen((prev) => !prev);
+    } else {
+      setIsCollapsed((prev) => !prev);
+    }
+  };
 
   const addToast = (type: "success" | "warning" | "error" | "info", title: string, message?: string) => {
     const id = Date.now().toString();
@@ -82,7 +105,7 @@ const MainApp: React.FC = () => {
       <div className="fixed top-0 left-1/4 w-[600px] h-[600px] bg-[#00A878]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-[#E67E22]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-      {/* 1. Left Sidebar Navigation */}
+      {/* 1. Floating Animated Collapsible Dock/Sidebar */}
       <Sidebar
         currentTab={currentTab}
         onSelectTab={(tab) => {
@@ -92,19 +115,21 @@ const MainApp: React.FC = () => {
             setCurrentTab(tab);
           }
         }}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
+        isMobileOpen={isMobileOpen}
+        onCloseMobile={() => setIsMobileOpen(false)}
       />
 
       {/* Main Layout Area with Smooth Dynamic Padding */}
       <div
         className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isSidebarOpen ? "lg:pl-72" : "lg:pl-0"
+          isCollapsed ? "lg:pl-[96px]" : "lg:pl-[304px]"
         }`}
       >
         <Navbar
-          isSidebarOpen={isSidebarOpen}
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          isSidebarOpen={!isCollapsed}
+          onToggleSidebar={handleToggleSidebar}
           onNavigateTab={setCurrentTab}
           globalSearch={globalSearch}
           onSearchChange={setGlobalSearch}
