@@ -20,7 +20,9 @@ const MainApp: React.FC = () => {
   const { user, isLoading } = useAuth();
   const [viewMode, setViewMode] = useState<"landing" | "app" | "login">("landing");
   const [currentTab, setCurrentTab] = useState("dashboard");
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
+  );
   const [agentPanelCollapsed, setAgentPanelCollapsed] = useState(true);
   const [globalSearch, setGlobalSearch] = useState("");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -90,14 +92,19 @@ const MainApp: React.FC = () => {
             setCurrentTab(tab);
           }
         }}
-        isOpen={mobileSidebarOpen}
-        onCloseMobile={() => setMobileSidebarOpen(false)}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
 
-      {/* Main Layout Area */}
-      <div className="lg:pl-64 flex-1 flex flex-col min-h-screen">
+      {/* Main Layout Area with Smooth Dynamic Padding */}
+      <div
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isSidebarOpen ? "lg:pl-72" : "lg:pl-0"
+        }`}
+      >
         <Navbar
-          onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onNavigateTab={setCurrentTab}
           globalSearch={globalSearch}
           onSearchChange={setGlobalSearch}
