@@ -198,34 +198,7 @@ export const ProductMaster: React.FC = () => {
         </button>
       </div>
 
-      {/* AI Quick Try Demo Banner */}
-      <div className="p-5 rounded-2xl bg-gradient-to-r from-[#0c142b] via-[#0f1d40] to-[#0c142b] text-white border border-slate-700/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold flex-shrink-0 border border-cyan-400/30">
-            <Sparkles className="w-5 h-5 text-cyan-300" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Try AI HSN/SAC Auto-Assistant
-            </h4>
-            <p className="text-xs text-slate-300 mt-0.5 max-w-xl leading-relaxed">
-              Searching for <span className="text-cyan-300 font-semibold font-mono">"ASUS TUF A16"</span> or <span className="text-cyan-300 font-semibold font-mono">"Software Development"</span> instantly suggests statutory HSN codes and 18% GST rate slabs.
-            </p>
-          </div>
-        </div>
 
-        <button
-          onClick={() => {
-            handleOpenAdd();
-            setAiQuery("ASUS TUF A16");
-            handleAiLookup("ASUS TUF A16");
-          }}
-          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm"
-        >
-          <span>Demo "ASUS TUF A16" Suggestion</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
 
       {/* Search & Category Filter Bar */}
       <div className="cyber-card p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
