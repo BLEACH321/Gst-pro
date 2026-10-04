@@ -20,7 +20,7 @@ const MainApp: React.FC = () => {
   const { user, isLoading } = useAuth();
   const [viewMode, setViewMode] = useState<"landing" | "app" | "login">("landing");
   const [currentTab, setCurrentTab] = useState("dashboard");
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [agentPanelCollapsed, setAgentPanelCollapsed] = useState(true);
   const [globalSearch, setGlobalSearch] = useState("");

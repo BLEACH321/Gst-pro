@@ -22,25 +22,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchCurrentUser = async () => {
+    const savedToken = localStorage.getItem("gst_auth_token");
+    if (!savedToken) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       setIsLoading(true);
       const data = await getMeApi();
       if (data?.user) {
         setUser(data.user);
         setBusiness(data.user.business || null);
+      } else {
+        localStorage.removeItem("gst_auth_token");
+        setToken(null);
       }
     } catch (err) {
-      console.warn("User session restore error, using demo user:", err);
-      // Auto-fallback for smooth experience
-      try {
-        const demoLogin = await loginApi();
-        if (demoLogin?.token) {
-          localStorage.setItem("gst_auth_token", demoLogin.token);
-          setToken(demoLogin.token);
-          setUser(demoLogin.user);
-          setBusiness(demoLogin.user.business);
-        }
-      } catch (e) {}
+      console.warn("Session expired or invalid:", err);
+      localStorage.removeItem("gst_auth_token");
+      setToken(null);
+      setUser(null);
+      setBusiness(null);
     } finally {
       setIsLoading(false);
     }
