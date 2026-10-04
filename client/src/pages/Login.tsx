@@ -57,10 +57,36 @@ export const Login: React.FC<LoginProps> = ({ onBackToLanding }) => {
     }))
   );
 
+  // Password policy evaluation
+  const hasFirstUpper = /^[A-Z]/.test(password);
+  const hasMinLength = password.length >= 8;
+  const hasNumber = /[0-9]/.test(password);
+  const hasSymbol = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+  const hasLetters = /[a-zA-Z]/.test(password);
+  const isPasswordValid = hasFirstUpper && hasMinLength && hasNumber && hasSymbol && hasLetters;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
+
+    // Validate password complexity
+    if (!hasFirstUpper) {
+      setError("Password must start with an uppercase letter (A-Z).");
+      return;
+    }
+    if (!hasMinLength) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+    if (!hasNumber) {
+      setError("Password must contain at least one numerical digit (0-9).");
+      return;
+    }
+    if (!hasSymbol) {
+      setError("Password must contain at least one special symbol (!@#$%^&*...).");
+      return;
+    }
 
     if (isRegister && password !== confirmPassword) {
       setError("Passwords do not match. Please verify.");
@@ -673,6 +699,53 @@ export const Login: React.FC<LoginProps> = ({ onBackToLanding }) => {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+
+                {/* Password Policy Real-Time Checklist */}
+                {password && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="p-3 rounded-2xl bg-[#060e18] border border-white/10 text-xs space-y-2 font-mono mt-2"
+                  >
+                    <div className="text-zinc-400 font-bold font-sans text-[10px] uppercase tracking-wider flex items-center justify-between border-b border-white/5 pb-1.5">
+                      <span>Password Security Requirements</span>
+                      <span className={`text-[10px] font-bold ${isPasswordValid ? "text-[#00E599]" : "text-amber-400"}`}>
+                        {isPasswordValid ? "Compliant ✓" : "Requirements Pending"}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[10px]">
+                      <div className={`flex items-center gap-1.5 transition-colors ${hasFirstUpper ? "text-[#00E599]" : "text-zinc-500"}`}>
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black border ${hasFirstUpper ? "bg-[#00E599]/20 border-[#00E599] text-[#00E599]" : "bg-white/5 border-zinc-700 text-zinc-500"}`}>
+                          {hasFirstUpper ? "✓" : "A"}
+                        </span>
+                        <span>1st letter uppercase</span>
+                      </div>
+
+                      <div className={`flex items-center gap-1.5 transition-colors ${hasMinLength ? "text-[#00E599]" : "text-zinc-500"}`}>
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black border ${hasMinLength ? "bg-[#00E599]/20 border-[#00E599] text-[#00E599]" : "bg-white/5 border-zinc-700 text-zinc-500"}`}>
+                          {hasMinLength ? "✓" : "8"}
+                        </span>
+                        <span>Min. 8 characters</span>
+                      </div>
+
+                      <div className={`flex items-center gap-1.5 transition-colors ${hasNumber ? "text-[#00E599]" : "text-zinc-500"}`}>
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black border ${hasNumber ? "bg-[#00E599]/20 border-[#00E599] text-[#00E599]" : "bg-white/5 border-zinc-700 text-zinc-500"}`}>
+                          {hasNumber ? "✓" : "#"}
+                        </span>
+                        <span>Numbers (0-9)</span>
+                      </div>
+
+                      <div className={`flex items-center gap-1.5 transition-colors ${hasSymbol ? "text-[#00E599]" : "text-zinc-500"}`}>
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black border ${hasSymbol ? "bg-[#00E599]/20 border-[#00E599] text-[#00E599]" : "bg-white/5 border-zinc-700 text-zinc-500"}`}>
+                          {hasSymbol ? "✓" : "@"}
+                        </span>
+                        <span>Special symbol (@#$)</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               {/* Confirm Password (Register Mode) */}

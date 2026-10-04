@@ -19,8 +19,8 @@ async function seed() {
   await prisma.validationRule.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Create Default Business User
-  const passwordHash = await bcrypt.hash("demo1234", 10);
+  // 2. Create Default Business User (Policy compliant: Uppercase initial, letters, numbers, symbol @, 8+ chars)
+  const passwordHash = await bcrypt.hash("Demo@1234", 10);
   const user = await prisma.user.create({
     data: {
       name: "Sunny Gupta",

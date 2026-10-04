@@ -16,6 +16,17 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Name, email, and password are required" });
     }
 
+    // Password policy: Starts with uppercase, min 8 chars, numbers, letters, symbols
+    const hasFirstUpper = /^[A-Z]/.test(password);
+    const hasMinLength = password.length >= 8;
+    const hasNumber = /[0-9]/.test(password);
+    const hasSymbol = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+    if (!hasFirstUpper || !hasMinLength || !hasNumber || !hasSymbol) {
+      return res.status(400).json({
+        error: "Password must start with an uppercase letter, be at least 8 characters long, and contain letters, numbers, and at least one special symbol."
+      });
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: "An account with this email already exists" });
