@@ -16,7 +16,9 @@ import {
   Radio,
   Crown,
   CheckCircle2,
-  Zap
+  Zap,
+  X,
+  Calculator
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
@@ -41,9 +43,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { user, business, logout } = useAuth();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const isExpanded = isMobileOpen || !isCollapsed;
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "⌘1", badge: "Live" },
+    { id: "income-tax", label: "Income Tax (ITR)", icon: Calculator, shortcut: "⌘T", badge: "ClearTax" },
     { id: "agent", label: "AI Agent Workspace", icon: Sparkles, shortcut: "⌘2", highlight: true },
     { id: "create-invoice", label: "Create Invoice", icon: FilePlus2, shortcut: "⌘3" },
     { id: "invoice-history", label: "Invoice History", icon: FileText, shortcut: "⌘4" },
@@ -74,14 +78,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <motion.aside
         layout
         animate={{
-          width: isCollapsed ? 68 : 280,
+          width: isMobileOpen ? 280 : isCollapsed ? 68 : 280,
           scale: 1,
           opacity: 1
         }}
         transition={{ type: "spring", stiffness: 400, damping: 28 }}
         className={`fixed top-3 left-3 z-50 rounded-[26px] bg-[#0c0d16]/95 backdrop-blur-2xl text-zinc-300 flex flex-col border border-white/15 shadow-[0_15px_50px_rgba(0,0,0,0.9),0_0_20px_rgba(0,229,153,0.12),inset_0_1px_1px_rgba(255,255,255,0.18)] max-h-[calc(100vh-1.5rem)] overflow-hidden transition-transform duration-300 select-none ${
           isMobileOpen ? "translate-x-0 w-[280px] bottom-3" : "-translate-x-[150%] lg:translate-x-0"
-        } ${isCollapsed ? "h-auto" : "bottom-3"}`}
+        } ${isCollapsed && !isMobileOpen ? "h-auto" : "bottom-3"}`}
       >
         {/* Dynamic Holographic Neon Rim Light */}
         <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#00E599]/20 via-[#00A878]/5 to-transparent pointer-events-none rounded-t-[26px]" />
@@ -107,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Expanded Brand Typography */}
             <AnimatePresence>
-              {!isCollapsed && (
+              {isExpanded && (
                 <motion.div
                   initial={{ opacity: 0, x: -8, width: 0 }}
                   animate={{ opacity: 1, x: 0, width: "auto" }}
@@ -118,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div>
                     <div className="flex items-center gap-1.5">
                       <h1 className="font-black text-white text-xs tracking-tight uppercase group-hover:text-[#00E599] transition-colors truncate">
-                        GST SAHAYAK
+                        GSTSAHAYAK
                       </h1>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] shadow-[0_0_8px_#00E599] shrink-0" />
                     </div>
@@ -131,12 +135,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onToggleCollapse();
+                      if (isMobileOpen) {
+                        onCloseMobile();
+                      } else {
+                        onToggleCollapse();
+                      }
                     }}
-                    className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
-                    title="Collapse (⌘B)"
+                    className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
+                    title={isMobileOpen ? "Close Menu" : "Collapse (⌘B)"}
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    {isMobileOpen ? <X className="w-4 h-4 text-white" /> : <ChevronLeft className="w-4 h-4" />}
                   </button>
                 </motion.div>
               )}
@@ -162,14 +170,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onMouseLeave={() => setHoveredTab(null)}
               >
                 <motion.button
-                  whileHover={{ scale: isCollapsed ? 1.08 : 1.02, x: isCollapsed ? 2 : 0 }}
+                  whileHover={{ scale: isCollapsed && !isMobileOpen ? 1.08 : 1.02, x: isCollapsed && !isMobileOpen ? 2 : 0 }}
                   whileTap={{ scale: 0.94 }}
                   onClick={() => {
                     onSelectTab(item.id);
-                    if (window.innerWidth < 1024) onCloseMobile();
+                    onCloseMobile();
                   }}
                   className={`w-full flex items-center rounded-xl transition-all duration-200 group relative cursor-pointer ${
-                    isCollapsed ? "justify-center p-2.5 h-10 w-full" : "gap-3 px-3 py-2.5"
+                    isCollapsed && !isMobileOpen ? "justify-center p-2.5 h-10 w-full" : "gap-3 px-3 py-2.5"
                   } ${
                     isActive
                       ? "text-black font-black"
@@ -205,7 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                   {/* Expanded Text Labels */}
                   <AnimatePresence>
-                    {!isCollapsed && (
+                    {isExpanded && (
                       <motion.div
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -257,7 +265,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Live Telemetry Card (When Expanded) */}
         <AnimatePresence>
-          {!isCollapsed && (
+          {isExpanded && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -298,7 +306,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Expanded User Details */}
             <AnimatePresence>
-              {!isCollapsed && (
+              {isExpanded && (
                 <motion.div
                   initial={{ opacity: 0, x: -6, width: 0 }}
                   animate={{ opacity: 1, x: 0, width: "auto" }}
@@ -319,7 +327,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Logout Button */}
           <AnimatePresence>
-            {!isCollapsed && (
+            {isExpanded && (
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}

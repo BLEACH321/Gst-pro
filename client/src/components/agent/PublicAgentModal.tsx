@@ -68,11 +68,12 @@ export const PublicAgentModal: React.FC<PublicAgentModalProps> = ({
   };
 
   const sampleQuestions = [
-    "What is GST?",
-    "What is HSN/SAC?",
-    "What is GST pre-validation?",
-    "How does anomaly detection work?",
-    "Create an invoice for me"
+    "What are e-Way bill rules and thresholds?",
+    "What is blocked ITC under Section 17(5)?",
+    "How is Place of Supply calculated?",
+    "When is Reverse Charge (RCM) mandatory?",
+    "What is the e-Invoicing threshold?",
+    "Explain the 10 pre-validation rules"
   ];
 
   return (

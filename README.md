@@ -4,6 +4,12 @@
 
 ---
 
+## 📖 Project Documentation & Purpose
+> 📄 **Complete POP & Project Benefits Document:** [PROJECT_POP_AND_BENEFITS.md](PROJECT_POP_AND_BENEFITS.md)  
+> *Detailed guide covering Purpose of Project (POP), problem statement, regulatory motivation, CA/business benefits, real-world failure scenarios, and system architecture.*
+
+---
+
 ## 📌 One-Line USP
 > *"GST Sahayak combines GST rule-based validation with Explainable AI to detect potential invoice risks before finalization and clearly explain what needs to be verified."*
 

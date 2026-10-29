@@ -125,10 +125,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigateTab }) => {
   return (
     <div className="space-y-8 animate-fadeIn pb-16">
       {/* 1. Agent-First Central Command Box */}
-      <div className="cred-card p-6 sm:p-8 rounded-3xl border border-white/10 bg-gradient-to-r from-[#0C182B] via-[#10213A] to-[#0C182B] space-y-4">
+      <div className="cred-card p-4 sm:p-8 rounded-3xl border border-white/10 bg-gradient-to-r from-[#0C182B] via-[#10213A] to-[#0C182B] space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#00A878]/15 border border-[#00A878]/30 flex items-center justify-center text-[#00A878]">
+            <div className="w-8 h-8 rounded-xl bg-[#00A878]/15 border border-[#00A878]/30 flex items-center justify-center text-[#00A878] shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
@@ -140,7 +140,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigateTab }) => {
               </p>
             </div>
           </div>
-          <span className="px-3 py-0.5 rounded-full bg-[#00A878]/10 text-[#00A878] border border-[#00A878]/30 font-mono text-[9px] font-black uppercase">
+          <span className="hidden sm:inline-block px-3 py-0.5 rounded-full bg-[#00A878]/10 text-[#00A878] border border-[#00A878]/30 font-mono text-[9px] font-black uppercase shrink-0">
             ✓ Agent Ready
           </span>
         </div>
@@ -152,18 +152,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigateTab }) => {
               onNavigateTab("agent");
             }
           }}
-          className="flex items-center gap-2.5 pt-1"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1"
         >
           <input
             type="text"
             value={agentInput}
             onChange={(e) => setAgentInput(e.target.value)}
-            placeholder="Try: Create an invoice for Rahul Enterprises for 5 ASUS laptops at ₹75,000 each..."
-            className="flex-1 px-4 py-3.5 bg-black/60 rounded-2xl border border-white/10 text-xs font-medium text-white placeholder-zinc-500 focus:border-[#00A878] focus:outline-hidden"
+            placeholder="Try: Create invoice for Rahul Enterprises for 5 laptops at ₹75,000 each..."
+            className="flex-1 px-4 py-3 sm:py-3.5 bg-black/60 rounded-2xl border border-white/10 text-xs font-medium text-white placeholder-zinc-500 focus:border-[#00A878] focus:outline-hidden"
           />
           <button
             type="submit"
-            className="cred-btn-emerald py-3.5 px-6 text-xs whitespace-nowrap"
+            className="cred-btn-emerald py-3 sm:py-3.5 px-6 text-xs whitespace-nowrap justify-center"
           >
             <span>Ask Agent</span>
             <ArrowRight className="w-4 h-4 stroke-[3]" />
@@ -204,10 +204,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigateTab }) => {
           <div className="max-w-xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-300">
               <Sparkles className="w-3.5 h-3.5 text-[#00e599]" />
-              GST Sahayak Hybrid Intelligence Protocol
+              GSTSAHAYAK Hybrid Intelligence Protocol
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tighter leading-tight uppercase">
+            <h1 className="text-2xl sm:text-5xl font-black text-white tracking-tighter leading-tight uppercase">
               NOT JUST COMPLIANT. <br />
               <span className="text-gradient-cred-white">BULLETPROOF.</span>
             </h1>
@@ -303,7 +303,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigateTab }) => {
       </div>
 
       {/* 6 Core KPI Metrics (CRED-Styled Neumorphic Beveled Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
         {/* Total Invoices */}
         <div className="cred-card p-5 rounded-3xl flex flex-col justify-between group cursor-default">
           <div className="flex items-center justify-between text-zinc-400">

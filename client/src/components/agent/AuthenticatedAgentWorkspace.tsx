@@ -293,6 +293,29 @@ export const AuthenticatedAgentWorkspace: React.FC<AuthenticatedAgentWorkspacePr
           <div ref={messagesEndRef} />
         </div>
 
+        {/* GST Statutory Quick Suggestion Chips */}
+        <div className="px-4 py-2 border-t border-white/5 bg-black/20 flex items-center gap-2 overflow-x-auto text-[11px] no-scrollbar">
+          <span className="text-zinc-500 font-mono text-[10px] shrink-0 uppercase font-bold">Ask GST:</span>
+          {[
+            "What are e-Way bill rules?",
+            "What is blocked ITC u/s 17(5)?",
+            "How does Place of Supply work?",
+            "When is Reverse Charge (RCM) mandatory?",
+            "Explain GSTR-1 vs GSTR-3B due dates",
+            "What is e-Invoicing threshold?",
+            "Create invoice for Rahul Enterprises"
+          ].map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleExecuteCommand(chip)}
+              className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-[#00E599]/20 hover:text-[#00E599] text-zinc-400 border border-white/5 hover:border-[#00E599]/30 transition-all shrink-0 cursor-pointer"
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
+
         {/* Input Bar Form */}
         <form
           onSubmit={(e) => {

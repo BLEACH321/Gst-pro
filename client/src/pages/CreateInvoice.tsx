@@ -295,7 +295,7 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
         </div>
 
         {/* Wizard Step Badges */}
-        <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/5">
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/5 overflow-x-auto max-w-full">
           {[
             { step: 1, label: "Invoice" },
             { step: 2, label: "Customer" },
@@ -598,7 +598,7 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
                   key={idx}
                   className="p-5 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-4 relative shadow-inner"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
                     <span className="text-xs font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-800/60 px-2.5 py-1 rounded-lg">
                       Item #{idx + 1}
                     </span>

@@ -12,9 +12,11 @@ import { AnomalyDashboard } from "./pages/AnomalyDashboard";
 import { Reports } from "./pages/Reports";
 import { AdminRules } from "./pages/AdminRules";
 import { LandingPage } from "./pages/LandingPage";
+import { IncomeTaxPortal } from "./pages/IncomeTaxPortal";
 import { AuthenticatedAgentWorkspace } from "./components/agent/AuthenticatedAgentWorkspace";
 import { ToastContainer, ToastMessage } from "./components/common/Toast";
 import { Logo3D } from "./components/common/Logo3D";
+import { LayoutDashboard, Sparkles, FileText, Plus, Menu } from "lucide-react";
 
 const MainApp: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -128,20 +130,22 @@ const MainApp: React.FC = () => {
         }`}
       >
         <Navbar
-          isSidebarOpen={!isCollapsed}
+          isSidebarOpen={isMobileOpen || !isCollapsed}
           onToggleSidebar={handleToggleSidebar}
           onNavigateTab={setCurrentTab}
           globalSearch={globalSearch}
           onSearchChange={setGlobalSearch}
+          currentTab={currentTab}
         />
 
         {/* Main Workspace Canvas */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fadeIn overflow-y-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fadeIn overflow-y-auto pb-28 lg:pb-8">
           {currentTab === "dashboard" && (
             <Dashboard
               onNavigateTab={setCurrentTab}
             />
           )}
+          {currentTab === "income-tax" && <IncomeTaxPortal />}
           {currentTab === "agent" && (
             <AuthenticatedAgentWorkspace
               currentTab={currentTab}
@@ -163,6 +167,66 @@ const MainApp: React.FC = () => {
           {currentTab === "rules" && <AdminRules />}
         </main>
       </div>
+
+      {/* Cyber Mobile Bottom Navigation Dock (Visible on mobile & tablet) */}
+      <nav className="lg:hidden fixed bottom-3 inset-x-3 z-40 bg-[#0c0d16]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-1.5 shadow-[0_10px_35px_rgba(0,0,0,0.9),0_0_20px_rgba(0,229,153,0.15),inset_0_1px_1px_rgba(255,255,255,0.15)] flex items-center justify-around select-none">
+        <button
+          onClick={() => setCurrentTab("dashboard")}
+          className={`flex flex-col items-center gap-1 py-1.5 px-3 rounded-xl transition-all cursor-pointer ${
+            currentTab === "dashboard"
+              ? "text-[#00E599] font-black"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          <LayoutDashboard className="w-5 h-5" />
+          <span className="text-[10px] tracking-tight">Home</span>
+        </button>
+
+        <button
+          onClick={() => setCurrentTab("agent")}
+          className={`flex flex-col items-center gap-1 py-1.5 px-3 rounded-xl transition-all cursor-pointer relative ${
+            currentTab === "agent"
+              ? "text-[#00E599] font-black"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          <Sparkles className="w-5 h-5 text-[#00E599] animate-pulse" />
+          <span className="text-[10px] tracking-tight">AI Agent</span>
+        </button>
+
+        {/* Center + Action Button */}
+        <button
+          onClick={() => setCurrentTab("create-invoice")}
+          className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl transition-all cursor-pointer shadow-lg active:scale-95 ${
+            currentTab === "create-invoice"
+              ? "bg-white text-black font-black shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+              : "bg-gradient-to-r from-[#00A878] to-[#00E599] text-[#07111F] font-black shadow-[0_0_15px_rgba(0,229,153,0.3)]"
+          }`}
+        >
+          <Plus className="w-4 h-4 stroke-[3]" />
+          <span className="text-xs font-bold tracking-tight">Invoice</span>
+        </button>
+
+        <button
+          onClick={() => setCurrentTab("invoice-history")}
+          className={`flex flex-col items-center gap-1 py-1.5 px-3 rounded-xl transition-all cursor-pointer ${
+            currentTab === "invoice-history"
+              ? "text-[#00E599] font-black"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          <FileText className="w-5 h-5" />
+          <span className="text-[10px] tracking-tight">History</span>
+        </button>
+
+        <button
+          onClick={() => setIsMobileOpen(true)}
+          className="flex flex-col items-center gap-1 py-1.5 px-3 rounded-xl text-zinc-400 hover:text-white transition-all cursor-pointer"
+        >
+          <Menu className="w-5 h-5" />
+          <span className="text-[10px] tracking-tight">More</span>
+        </button>
+      </nav>
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onDismiss={handleDismissToast} />

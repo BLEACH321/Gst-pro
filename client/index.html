@@ -2,10 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261004" />
+    <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg?v=20261004" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GSTSAHAYAK • Statutory Pre-Validation & AI Compliance Platform</title>
     <meta name="description" content="Next-Gen Hybrid Rule Engine & Explainable AI GST Pre-Validation System" />
+    <script>
+      (function() {
+        const updateFavicon = () => {
+          const links = document.querySelectorAll("link[rel*='icon']");
+          links.forEach(l => {
+            l.href = '/favicon.svg?v=' + Date.now();
+          });
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', updateFavicon);
+        } else {
+          updateFavicon();
+        }
+      })();
+    </script>
 
     <!-- Google Fonts Preconnect & High-End Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

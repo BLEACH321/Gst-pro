@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { authMiddleware } from "../middleware/auth.js";
 import { validateGstRules } from "../rules/gstRuleEngine.js";
 import { analyzeInvoiceWithAI } from "../services/aiService.js";
+import { searchGstKnowledge } from "../services/gstKnowledgeBase.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -53,38 +54,11 @@ router.post("/public-ask", async (req, res) => {
       });
     }
 
-    // Knowledge base responses for public information
-    if (query.includes("what is gst") || query.includes("gst meaning")) {
+    // Knowledge base responses for public information: check comprehensive GST repository
+    const kbResponse = searchGstKnowledge(prompt);
+    if (kbResponse) {
       return res.json({
-        response: "Goods and Services Tax (GST) is a comprehensive multi-stage destination-based tax levied on the supply of goods and services across India. Under GST, transactions are classified as Intra-State (CGST + SGST) or Inter-State (IGST) based on the supplier's location and the Place of Supply.",
-        isPrivateRestricted: false
-      });
-    }
-
-    if (query.includes("hsn") || query.includes("sac")) {
-      return res.json({
-        response: "HSN (Harmonized System of Nomenclature) is an internationally standardized system of names and numbers to classify goods (e.g. 8471 for computers). SAC (Services Accounting Code) is used for classifying services. Under GST, valid HSN/SAC codes are mandatory on all B2B invoices.",
-        isPrivateRestricted: false
-      });
-    }
-
-    if (query.includes("pre-validation") || query.includes("how does it work") || query.includes("prevalidation")) {
-      return res.json({
-        response: "GSTSAHAYAK Pre-Validation inspects your invoice before it is finalized or submitted to the portal. It executes dual validation: (1) Deterministic statutory GST rules checking GSTIN checksums, state alignment, and rate splits; and (2) Unsupervised Isolation Forest Machine Learning that detects statistical anomalies in volume and unit rates.",
-        isPrivateRestricted: false
-      });
-    }
-
-    if (query.includes("anomaly") || query.includes("fraud") || query.includes("outlier")) {
-      return res.json({
-        response: "Anomaly detection in GSTSAHAYAK utilizes a 100-tree Scikit-learn Isolation Forest algorithm that identifies volumetric surges, abnormal rate deviations, and unusual transaction clusters compared to historical baseline distributions.",
-        isPrivateRestricted: false
-      });
-    }
-
-    if (query.includes("business") || query.includes("who can use")) {
-      return res.json({
-        response: "GSTSAHAYAK is designed for all enterprise categories: E-Commerce sellers managing large product catalogs, Retail businesses creating high-frequency invoices, and Service providers requiring accurate Place of Supply calculations.",
+        response: kbResponse,
         isPrivateRestricted: false
       });
     }
@@ -453,6 +427,25 @@ router.post("/command", authMiddleware, async (req, res) => {
           ]
         },
         toolUsed: "batchImportProducts"
+      });
+    }
+
+    // ---------------------------------------------------------------------
+    // TOOL E: Comprehensive GST Knowledge & Statutory Advisory
+    // ---------------------------------------------------------------------
+    const gstAdvisoryAnswer = searchGstKnowledge(prompt);
+    if (gstAdvisoryAnswer) {
+      actionTimeline.push({
+        step: 1,
+        title: "Statutory GST Knowledge Engine",
+        status: "success",
+        detail: "Consulted CBIC statutory regulations, CGST/IGST Act, and Rule schedules."
+      });
+
+      return res.json({
+        message: gstAdvisoryAnswer,
+        actionTimeline,
+        toolUsed: "gstKnowledgeConsult"
       });
     }
 

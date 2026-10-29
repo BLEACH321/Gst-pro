@@ -472,6 +472,102 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onLogin 
         </div>
       </section>
 
+      {/* ================= CLEARTAX INCOME TAX SHOWCASE SECTION ================= */}
+      <section className="py-24 px-6 sm:px-12 max-w-7xl mx-auto border-t border-white/10">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#002440] via-[#091b30] to-[#070e17] border border-cyan-500/30 p-8 sm:p-12 shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-400 text-black">
+                  NEW • CLEARTAX ITR INTEGRATION
+                </span>
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/10 text-cyan-200 border border-white/10">
+                  AY 2026-27 (FY 2025-26)
+                </span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+                File Income Tax Returns in 3 Minutes with Form 16 Auto-Fill.
+              </h2>
+
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Seamlessly upload your Form 16, calculate Old vs New Tax Regime savings, reconcile AIS/TIS tax credits, and claim maximal refunds compliant with the latest Finance Budget.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span className="text-zinc-200">Form 16 Auto-Fill Parser</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#00E599] shrink-0" />
+                  <span className="text-zinc-200">Old vs New Regime Optimizer</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="text-zinc-200">AIS & Form 26AS Verification</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <span className="text-zinc-200">Instant ITR-V Acknowledgement</span>
+                </div>
+              </div>
+
+              <div className="pt-4 flex flex-wrap items-center gap-4">
+                <button
+                  onClick={onGetStarted}
+                  className="px-6 py-3.5 rounded-full bg-cyan-400 hover:bg-cyan-300 text-black font-black text-xs uppercase tracking-wider inline-flex items-center gap-2 shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all hover:scale-105 cursor-pointer"
+                >
+                  <span>Launch Income Tax Portal</span>
+                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                </button>
+                <span className="text-[11px] text-zinc-400">
+                  ITR-1 (Sahaj), ITR-2, and ITR-4 (Sugam) supported
+                </span>
+              </div>
+            </div>
+
+            {/* Visual Regime Comparison Preview Card */}
+            <div className="bg-[#0b1522]/90 backdrop-blur-xl border border-white/15 rounded-3xl p-6 space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <span className="text-xs font-black uppercase text-cyan-400">Budget 2025/26 Live Comparison</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">
+                  Auto-Calculated
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-4 rounded-2xl bg-[#00E599]/10 border border-[#00E599]/30 space-y-2">
+                  <span className="block text-[10px] font-bold text-emerald-300 uppercase">New Tax Regime</span>
+                  <span className="block text-xs text-zinc-400">Std Ded: ₹75,000</span>
+                  <span className="block text-lg font-black text-[#00E599] font-mono">Tax: ₹82,500</span>
+                  <span className="inline-block text-[9px] px-1.5 py-0.5 rounded bg-black/40 text-emerald-300 font-bold">
+                    ✓ Recommended (Saves ₹34,200)
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                  <span className="block text-[10px] font-bold text-zinc-400 uppercase">Old Tax Regime</span>
+                  <span className="block text-xs text-zinc-400">Std Ded: ₹50,000</span>
+                  <span className="block text-lg font-black text-zinc-300 font-mono">Tax: ₹1,16,700</span>
+                  <span className="inline-block text-[9px] px-1.5 py-0.5 rounded bg-black/40 text-zinc-400 font-bold">
+                    Requires 80C + 80D + HRA Proofs
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white/5 text-[11px] text-zinc-300 flex items-center justify-between">
+                <span>Income Bracket: ₹15,00,000</span>
+                <span className="text-cyan-300 font-bold">Zero Tax up to ₹7,00,000 u/s 87A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ================= FINAL CALL TO ACTION ================= */}
       <section className="py-20 px-6 sm:px-12 max-w-7xl mx-auto border-t border-white/10 text-center">
         <div className="bg-gradient-to-b from-[#0b1522] to-[#070e17] rounded-3xl p-10 sm:p-16 border border-white/10 relative overflow-hidden space-y-6">

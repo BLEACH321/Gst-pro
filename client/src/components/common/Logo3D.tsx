@@ -111,9 +111,9 @@ export const Logo3D: React.FC<Logo3DProps> = ({
             backfaceVisibility: "visible"
           }}
         >
-          {/* Inner Hexagon Graphic */}
-          <svg className="w-1/2 h-1/2 fill-current drop-shadow-sm" viewBox="0 0 24 24">
-            <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
+          {/* Inner Fintech Lightning Bolt Graphic */}
+          <svg className="w-3/5 h-3/5 fill-current drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" viewBox="0 0 24 24">
+            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" />
           </svg>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-white/30 pointer-events-none" />
         </div>
