@@ -9,7 +9,12 @@
     "start": "node src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "seed": "node src/seed.js"
+    "seed": "node src/seed.js",
+    "seed:rich": "node src/add_rich_dummy_data.js",
+    "test:rules": "node tests/test_rule_engine.js",
+    "test:api": "node tests/test_backend_api.js",
+    "test:checks": "node tests/verify_all_seven_checks.js",
+    "test:all": "node tests/test_rule_engine.js && node tests/test_backend_api.js && node tests/verify_all_seven_checks.js"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",

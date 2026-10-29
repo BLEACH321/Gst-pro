@@ -6,7 +6,13 @@
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
     "seed": "npm --prefix server run seed",
-    "train:ai": "py ai_engine/anomaly_detector.py --train"
+    "seed:rich": "npm --prefix server run seed:rich",
+    "train:ai": "py ai_engine/anomaly_detector.py --train",
+    "test:ai": "py ai_engine/test_ai_model.py",
+    "test:rules": "npm --prefix server run test:rules",
+    "test:api": "npm --prefix server run test:api",
+    "test:checks": "npm --prefix server run test:checks",
+    "test": "npm --prefix server run test:all && py ai_engine/test_ai_model.py"
   },
   "keywords": [
     "gst",
