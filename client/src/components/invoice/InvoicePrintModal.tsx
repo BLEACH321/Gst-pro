@@ -193,10 +193,13 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
             </table>
           </div>
 
-          {/* Tax Breakdown & Financial Totals */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 my-4 text-xs w-full max-w-full mx-auto">
-            <div className="sm:col-span-7 bg-white p-4 rounded-xl border border-slate-300 shadow-sm">
-              <h4 className="font-bold text-slate-900 text-xs mb-2">Statutory Tax Summary</h4>
+          {/* Tax Breakdown & Financial Totals (Centered Container) */}
+          <div className="flex flex-col sm:flex-row items-stretch justify-center gap-5 my-6 max-w-2xl mx-auto w-full text-xs">
+            {/* Box 1: Statutory Tax Summary */}
+            <div className="flex-1 bg-white p-4 rounded-xl border border-slate-300 shadow-sm flex flex-col justify-between">
+              <h4 className="font-bold text-slate-900 text-xs mb-2 pb-1 border-b border-slate-200">
+                Statutory Tax Summary
+              </h4>
               <div className="space-y-1.5 text-slate-700">
                 <div className="flex justify-between items-center">
                   <span>Central GST (CGST):</span>
@@ -225,8 +228,11 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
               </div>
             </div>
 
-            {/* Final Total box (Clean White Background & Crisp Black Text) */}
-            <div className="sm:col-span-5 bg-white text-slate-900 p-4 rounded-xl border-2 border-slate-900 shadow-sm flex flex-col justify-between">
+            {/* Box 2: Final Total Box (Clean White BG, Bold Black Text, Perfectly Centered) */}
+            <div className="flex-1 bg-white text-slate-900 p-4 rounded-xl border-2 border-slate-900 shadow-md flex flex-col justify-between">
+              <h4 className="font-bold text-slate-900 text-xs mb-2 pb-1 border-b border-slate-200">
+                Invoice Total Summary
+              </h4>
               <div className="space-y-1.5 text-xs text-slate-700">
                 <div className="flex justify-between items-center">
                   <span>Taxable Base Value:</span>
@@ -241,11 +247,11 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
                   </span>
                 </div>
               </div>
-              <div className="pt-3 border-t-2 border-slate-900 flex items-center justify-between mt-3 bg-slate-50 p-2.5 rounded-lg">
-                <span className="text-xs uppercase tracking-wider font-black text-slate-900">
-                  Grand Total:
+              <div className="pt-2.5 border-t-2 border-slate-900 flex flex-col items-center justify-center mt-3 bg-slate-50 p-2.5 rounded-lg text-center">
+                <span className="text-[10px] uppercase tracking-widest font-black text-slate-600 mb-0.5">
+                  Grand Total
                 </span>
-                <span className="text-xl font-mono font-black text-slate-950">
+                <span className="text-2xl font-mono font-black text-slate-950 tracking-tight">
                   ₹{invoice.grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                 </span>
               </div>
