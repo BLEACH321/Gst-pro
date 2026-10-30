@@ -47,12 +47,12 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
       title="Statutory GST Tax Invoice Preview"
       subtitle={`${invoice.invoiceNumber} • Ready for High-Resolution Print / PDF Export`}
     >
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-4xl mx-auto w-full">
         {/* Printable Area (Kept crisp white & high-contrast for physical printing / PDF generation) */}
         <div
           ref={printRef}
           id="printable-invoice"
-          className="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 text-slate-800 shadow-2xl print:m-0 print:p-0 print:border-none print:shadow-none"
+          className="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 text-slate-800 shadow-2xl print:m-0 print:p-0 print:border-none print:shadow-none w-full mx-auto"
         >
           {/* Header Banner */}
           <div className="flex flex-col sm:flex-row items-start justify-between border-b-2 border-slate-900 pb-5 gap-4">
@@ -194,58 +194,58 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
           </div>
 
           {/* Tax Breakdown & Financial Totals */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 my-4 text-xs">
-            <div className="sm:col-span-7 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 my-4 text-xs w-full max-w-full mx-auto">
+            <div className="sm:col-span-7 bg-white p-4 rounded-xl border border-slate-300 shadow-sm">
               <h4 className="font-bold text-slate-900 text-xs mb-2">Statutory Tax Summary</h4>
-              <div className="space-y-1 text-slate-600">
-                <div className="flex justify-between">
+              <div className="space-y-1.5 text-slate-700">
+                <div className="flex justify-between items-center">
                   <span>Central GST (CGST):</span>
-                  <span className="font-mono font-semibold text-slate-900">
+                  <span className="font-mono font-bold text-slate-900">
                     ₹{invoice.cgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span>State GST (SGST):</span>
-                  <span className="font-mono font-semibold text-slate-900">
+                  <span className="font-mono font-bold text-slate-900">
                     ₹{invoice.sgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span>Integrated GST (IGST):</span>
-                  <span className="font-mono font-semibold text-slate-900">
+                  <span className="font-mono font-bold text-slate-900">
                     ₹{invoice.igst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex justify-between pt-1 border-t border-slate-200 font-bold text-slate-900">
+                <div className="flex justify-between items-center pt-2 border-t border-slate-300 font-bold text-slate-950">
                   <span>Total Tax Assessed:</span>
-                  <span className="font-mono">
+                  <span className="font-mono font-black text-slate-950 text-sm">
                     ₹{invoice.totalGst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Final Total box */}
-            <div className="sm:col-span-5 bg-slate-950 text-white p-4 rounded-xl flex flex-col justify-between">
-              <div className="space-y-1.5 text-xs text-slate-300">
-                <div className="flex justify-between">
+            {/* Final Total box (Clean White Background & Crisp Black Text) */}
+            <div className="sm:col-span-5 bg-white text-slate-900 p-4 rounded-xl border-2 border-slate-900 shadow-sm flex flex-col justify-between">
+              <div className="space-y-1.5 text-xs text-slate-700">
+                <div className="flex justify-between items-center">
                   <span>Taxable Base Value:</span>
-                  <span className="font-mono font-semibold text-white">
+                  <span className="font-mono font-bold text-slate-900">
                     ₹{invoice.taxableAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span>Total GST:</span>
-                  <span className="font-mono font-semibold text-white">
+                  <span className="font-mono font-bold text-slate-900">
                     ₹{invoice.totalGst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
-              <div className="pt-3 border-t border-slate-800 flex items-baseline justify-between mt-2">
-                <span className="text-xs uppercase tracking-wider font-bold text-slate-300">
-                  Grand Total
+              <div className="pt-3 border-t-2 border-slate-900 flex items-center justify-between mt-3 bg-slate-50 p-2.5 rounded-lg">
+                <span className="text-xs uppercase tracking-wider font-black text-slate-900">
+                  Grand Total:
                 </span>
-                <span className="text-xl font-mono font-black text-emerald-400">
+                <span className="text-xl font-mono font-black text-slate-950">
                   ₹{invoice.grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                 </span>
               </div>
