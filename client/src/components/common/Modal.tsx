@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 interface ModalProps {
@@ -23,16 +24,17 @@ export const Modal: React.FC<ModalProps> = ({
       if (e.key === "Escape") onClose();
     };
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     }
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === "undefined") return null;
 
   const maxWidthMap = {
     sm: "max-w-sm",
@@ -44,30 +46,37 @@ export const Modal: React.FC<ModalProps> = ({
     "5xl": "max-w-5xl"
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
+      onClick={onClose}
+    >
       <div
-        className={`bg-[#0b1226] rounded-3xl shadow-2xl border border-slate-700/80 w-full ${maxWidthMap[maxWidth]} max-h-[90vh] flex flex-col overflow-hidden transform transition-all`}
+        className={`bg-[#0b1226] rounded-3xl shadow-2xl border border-slate-700/80 w-full ${maxWidthMap[maxWidth]} max-h-[92vh] flex flex-col overflow-hidden my-auto relative animate-fadeIn`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
+        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80 shrink-0">
           <div>
-            <h3 className="text-lg font-black text-white">{title}</h3>
+            <h3 className="text-lg font-black text-white tracking-tight">{title}</h3>
             {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-700"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-700 cursor-pointer"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto flex-1 custom-scrollbar text-slate-200">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 custom-scrollbar text-slate-200">
+          {children}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

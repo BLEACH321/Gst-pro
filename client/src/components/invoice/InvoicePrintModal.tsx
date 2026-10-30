@@ -279,13 +279,13 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2.5 bg-slate-850 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-bold transition-colors"
+            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer"
           >
             Close
           </button>
           <button
             onClick={handlePrint}
-            className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white rounded-xl text-xs font-black shadow-glow-cyan transition-all flex items-center gap-2"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white rounded-xl text-xs font-black shadow-glow-cyan transition-all flex items-center gap-2 cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             Print / Save as PDF

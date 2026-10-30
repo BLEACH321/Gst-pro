@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Sparkles,
   Send,
@@ -76,9 +77,15 @@ export const PublicAgentModal: React.FC<PublicAgentModalProps> = ({
     "Explain the 10 pre-validation rules"
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-2xl bg-[#081324] border border-white/10 rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl bg-[#081324] border border-white/10 rounded-3xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden my-auto animate-fadeIn relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/40">
           <div className="flex items-center gap-3">
@@ -205,6 +212,7 @@ export const PublicAgentModal: React.FC<PublicAgentModalProps> = ({
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
