@@ -151,7 +151,7 @@ export const AnomalyDashboard: React.FC = () => {
             Average Amount
           </span>
           <h3 className="text-3xl font-black text-white font-mono mt-3">
-            ₹{Math.round(metrics.averageAmount / 1000)}k
+            ₹{Math.round((metrics?.averageAmount || 0) / 1000)}k
           </h3>
           <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wider font-bold">Mean Invoice Value</p>
         </div>
@@ -161,7 +161,7 @@ export const AnomalyDashboard: React.FC = () => {
             Risk Rating
           </span>
           <h3 className="text-3xl font-black text-[#ff2d78] font-mono mt-3">
-            {metrics.highestAnomalyScore}%
+            {metrics?.highestAnomalyScore || 0}%
           </h3>
           <p className="text-[10px] text-zinc-400 mt-1 uppercase tracking-wider font-bold">Peak Discrepancy</p>
         </div>
@@ -226,12 +226,12 @@ export const AnomalyDashboard: React.FC = () => {
               <div key={cat.category} className="space-y-1.5 p-3 rounded-2xl bg-black/40 border border-white/5">
                 <div className="flex justify-between text-xs">
                   <span className="font-bold text-white">{cat.category}</span>
-                  <span className="font-mono text-[#ff2d78] font-black">{cat.anomalyCount} Outliers</span>
+                  <span className="font-mono text-[#ff2d78] font-black">{cat.anomalyCount ?? cat.anomalies ?? 0} Outliers</span>
                 </div>
                 <div className="w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-zinc-200 to-[#ff2d78] rounded-full"
-                    style={{ width: `${Math.min(cat.anomalyCount * 25, 100)}%` }}
+                    style={{ width: `${Math.min((cat.anomalyCount ?? cat.anomalies ?? 0) * 25, 100)}%` }}
                   />
                 </div>
               </div>
@@ -278,13 +278,13 @@ export const AnomalyDashboard: React.FC = () => {
                   </td>
                   <td className="py-4 px-5 font-bold text-zinc-200">{inv.customerName}</td>
                   <td className="py-4 px-5 text-right font-mono font-black text-white">
-                    ₹{inv.grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    ₹{(inv.grandTotal ?? inv.amount ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="py-4 px-5 text-center">
-                    <RiskBadge level={inv.riskLevel} score={inv.riskScore} showScore />
+                    <RiskBadge level={inv.riskLevel || "VALID"} score={inv.riskScore ?? inv.score ?? 0} showScore />
                   </td>
                   <td className="py-4 px-5 text-zinc-400 max-w-sm leading-relaxed">
-                    {inv.explanation}
+                    {inv.explanation || inv.reason || "Compliant transaction pattern"}
                   </td>
                   <td className="py-4 px-5 text-center">
                     <button

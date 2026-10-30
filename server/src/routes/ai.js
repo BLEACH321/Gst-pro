@@ -86,6 +86,7 @@ router.get("/anomalies", authMiddleware, async (req, res) => {
       category: cat,
       totalItems: categoryMap[cat].total,
       anomalies: categoryMap[cat].anomalies,
+      anomalyCount: categoryMap[cat].anomalies,
       totalAmount: categoryMap[cat].amount
     }));
 
@@ -104,10 +105,13 @@ router.get("/anomalies", authMiddleware, async (req, res) => {
         customerName: inv.customerName,
         date: inv.invoiceDate,
         amount: inv.grandTotal,
+        grandTotal: inv.grandTotal,
         gst: inv.totalGst,
         score: inv.riskScore,
+        riskScore: inv.riskScore,
         riskLevel: inv.riskLevel,
         reason: inv.anomalyResult?.explanation || "Unusual transaction profile detected",
+        explanation: inv.anomalyResult?.explanation || "Unusual transaction profile detected",
         suggestedActions,
         status: inv.status
       };

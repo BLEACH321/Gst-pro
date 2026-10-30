@@ -16,6 +16,7 @@ import { IncomeTaxPortal } from "./pages/IncomeTaxPortal";
 import { AuthenticatedAgentWorkspace } from "./components/agent/AuthenticatedAgentWorkspace";
 import { ToastContainer, ToastMessage } from "./components/common/Toast";
 import { Logo3D } from "./components/common/Logo3D";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import { LayoutDashboard, Sparkles, FileText, Plus, Menu } from "lucide-react";
 
 const MainApp: React.FC = () => {
@@ -140,31 +141,33 @@ const MainApp: React.FC = () => {
 
         {/* Main Workspace Canvas */}
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fadeIn overflow-y-auto pb-28 lg:pb-8">
-          {currentTab === "dashboard" && (
-            <Dashboard
-              onNavigateTab={setCurrentTab}
-            />
-          )}
-          {currentTab === "income-tax" && <IncomeTaxPortal />}
-          {currentTab === "agent" && (
-            <AuthenticatedAgentWorkspace
-              currentTab={currentTab}
-              onNavigateTab={setCurrentTab}
-              onSyncWorkspaceState={setSyncedWorkspaceState}
-            />
-          )}
-          {currentTab === "business" && <BusinessProfile />}
-          {currentTab === "products" && <ProductMaster />}
-          {currentTab === "create-invoice" && (
-            <CreateInvoice
-              onNavigateTab={setCurrentTab}
-              initialSyncedState={syncedWorkspaceState}
-            />
-          )}
-          {currentTab === "invoice-history" && <InvoiceHistory />}
-          {currentTab === "anomalies" && <AnomalyDashboard />}
-          {currentTab === "reports" && <Reports />}
-          {currentTab === "rules" && <AdminRules />}
+          <ErrorBoundary key={currentTab} tabName={currentTab} onReset={() => setCurrentTab("dashboard")}>
+            {currentTab === "dashboard" && (
+              <Dashboard
+                onNavigateTab={setCurrentTab}
+              />
+            )}
+            {currentTab === "income-tax" && <IncomeTaxPortal />}
+            {currentTab === "agent" && (
+              <AuthenticatedAgentWorkspace
+                currentTab={currentTab}
+                onNavigateTab={setCurrentTab}
+                onSyncWorkspaceState={setSyncedWorkspaceState}
+              />
+            )}
+            {currentTab === "business" && <BusinessProfile />}
+            {currentTab === "products" && <ProductMaster />}
+            {currentTab === "create-invoice" && (
+              <CreateInvoice
+                onNavigateTab={setCurrentTab}
+                initialSyncedState={syncedWorkspaceState}
+              />
+            )}
+            {currentTab === "invoice-history" && <InvoiceHistory />}
+            {currentTab === "anomalies" && <AnomalyDashboard />}
+            {currentTab === "reports" && <Reports />}
+            {currentTab === "rules" && <AdminRules />}
+          </ErrorBoundary>
         </main>
       </div>
 
@@ -236,8 +239,10 @@ const MainApp: React.FC = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

@@ -202,13 +202,13 @@ export const InvoiceHistory: React.FC = () => {
                     <p className="text-[10px] font-mono text-cyan-400">{inv.customerGstin || "B2C"}</p>
                   </td>
                   <td className="py-3.5 px-4 text-right font-mono text-slate-300">
-                    ₹{inv.taxableAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    ₹{(inv.taxableAmount ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="py-3.5 px-4 text-right font-mono text-slate-300">
-                    ₹{inv.totalGst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    ₹{(inv.totalGst ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="py-3.5 px-4 text-right font-mono font-black text-white">
-                    ₹{inv.grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                    ₹{(inv.grandTotal ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="py-3.5 px-4 text-center">
                     <span

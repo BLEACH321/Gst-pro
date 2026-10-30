@@ -265,8 +265,8 @@ export const ProductMaster: React.FC = () => {
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-semibold">Standard Price</p>
                 <p className="text-base font-black text-white font-mono">
-                  ₹{prod.price.toLocaleString("en-IN")}{" "}
-                  <span className="text-xs font-normal text-slate-400">/ {prod.unit}</span>
+                  ₹{(prod.price ?? 0).toLocaleString("en-IN")}{" "}
+                  <span className="text-xs font-normal text-slate-400">/ {prod.unit || "PCS"}</span>
                 </p>
               </div>
 

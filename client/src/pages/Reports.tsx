@@ -218,19 +218,19 @@ export const Reports: React.FC = () => {
                       </td>
                       <td className="py-3 px-3 font-bold text-slate-200">{inv.customerName}</td>
                       <td className="py-3 px-3 text-right font-mono text-slate-300">
-                        {inv.taxableAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                        {(inv.taxableAmount ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-3 text-right font-mono text-cyan-400">
-                        {inv.cgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                        {(inv.cgst ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-3 text-right font-mono text-cyan-400">
-                        {inv.sgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                        {(inv.sgst ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-3 text-right font-mono text-cyan-400">
-                        {inv.igst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                        {(inv.igst ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-3 text-right font-mono font-black text-white">
-                        {inv.grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                        {(inv.grandTotal ?? 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-3 text-center">
                         <span

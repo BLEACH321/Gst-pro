@@ -373,7 +373,7 @@ export const AdminRules: React.FC = () => {
                   auditLogs.map((log) => (
                     <tr key={log.id} className="hover:bg-white/[0.02]">
                       <td className="py-3.5 px-5 text-zinc-400">
-                        {new Date(log.timestamp).toLocaleString("en-IN", {
+                        {new Date(log.createdAt || log.timestamp || Date.now()).toLocaleString("en-IN", {
                           dateStyle: "medium",
                           timeStyle: "short"
                         })}
