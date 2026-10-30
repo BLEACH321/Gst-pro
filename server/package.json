@@ -14,7 +14,8 @@
     "test:rules": "node tests/test_rule_engine.js",
     "test:api": "node tests/test_backend_api.js",
     "test:checks": "node tests/verify_all_seven_checks.js",
-    "test:all": "node tests/test_rule_engine.js && node tests/test_backend_api.js && node tests/verify_all_seven_checks.js"
+    "test:gstin": "node tests/test_gstin_verification_suite.js",
+    "test:all": "node tests/test_rule_engine.js && node tests/test_backend_api.js && node tests/test_gstin_verification_suite.js"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",

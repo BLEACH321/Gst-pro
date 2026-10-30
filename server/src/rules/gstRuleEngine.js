@@ -7,17 +7,7 @@
 const GSTIN_REGEX = /^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 const VALID_GST_RATES = [0, 0.1, 0.25, 3, 5, 12, 18, 28];
 
-const STATE_CODES = {
-  "01": "Jammu & Kashmir", "02": "Himachal Pradesh", "03": "Punjab", "04": "Chandigarh",
-  "05": "Uttarakhand", "06": "Haryana", "07": "Delhi", "08": "Rajasthan",
-  "09": "Uttar Pradesh", "10": "Bihar", "11": "Sikkim", "12": "Arunachal Pradesh",
-  "13": "Nagaland", "14": "Manipur", "15": "Mizoram", "16": "Tripura",
-  "17": "Meghalaya", "18": "Assam", "19": "West Bengal", "20": "Jharkhand",
-  "21": "Odisha", "22": "Chhattisgarh", "23": "Madhya Pradesh", "24": "Gujarat",
-  "27": "Maharashtra", "28": "Andhra Pradesh", "29": "Karnataka", "30": "Goa",
-  "31": "Lakshadweep", "32": "Kerala", "33": "Tamil Nadu", "34": "Puducherry",
-  "35": "Andaman & Nicobar Islands", "36": "Telangana", "37": "Andhra Pradesh (New)", "38": "Ladakh"
-};
+import { validateGstinFormat, STATE_CODES } from "../services/gstVerificationService.js";
 
 function getStateFromGstin(gstin) {
   if (!gstin || gstin.length < 2) return null;
@@ -54,49 +44,64 @@ export function validateGstRules(invoice, activeRules = [], existingInvoices = [
     });
   }
 
-  // --- RULE-GST-001: GSTIN Structure & State Code Validation ---
+  // --- RULE-GST-001: GSTIN Structure, State Code & Mod-36 Checksum Validation ---
   const supplierGstin = invoice.supplierGstin || invoice.businessGstin || "";
   const customerGstin = invoice.customerGstin || "";
   
   if (supplierGstin) {
-    if (!GSTIN_REGEX.test(supplierGstin.toUpperCase())) {
+    const suppFormat = validateGstinFormat(supplierGstin);
+    if (!suppFormat.isValid) {
       record(
         "RULE-GST-001",
-        "Supplier GSTIN Format Check",
+        "Supplier GSTIN Statutory Integrity Check",
         "FAIL",
         "ERROR",
-        `Supplier GSTIN '${supplierGstin}' does not conform to the standard 15-character GST structure.`,
-        "Verify business PAN and state code prefix in Business Profile."
+        `Supplier GSTIN '${supplierGstin}' validation failed: ${suppFormat.error}`,
+        "Ensure the 15-character GSTIN, State code, PAN, and Mod-36 check digit are correct."
       );
     } else {
       record(
         "RULE-GST-001",
-        "Supplier GSTIN Format Check",
+        "Supplier GSTIN Statutory Integrity Check",
         "PASS",
         "INFO",
-        `Supplier GSTIN is valid (${getStateFromGstin(supplierGstin)}).`
+        `Supplier GSTIN is valid (${suppFormat.stateName}, PAN: ${suppFormat.pan}, Check digit: ${suppFormat.checkDigit}).`
       );
     }
   }
 
   if (customerGstin) {
-    if (!GSTIN_REGEX.test(customerGstin.toUpperCase())) {
+    const custFormat = validateGstinFormat(customerGstin);
+    if (!custFormat.isValid) {
       record(
         "RULE-GST-001B",
-        "Customer GSTIN Format Check",
+        "Customer GSTIN Statutory Integrity Check",
         "FAIL",
         "ERROR",
-        `Customer GSTIN '${customerGstin}' is malformed or invalid.`,
-        "Check customer registration certificate or mark as Unregistered B2C."
+        `Customer GSTIN '${customerGstin}' validation failed: ${custFormat.error}`,
+        "Check customer registration certificate or mark transaction as Unregistered B2C."
       );
     } else {
       record(
         "RULE-GST-001B",
-        "Customer GSTIN Format Check",
+        "Customer GSTIN Statutory Integrity Check",
         "PASS",
         "INFO",
-        `Customer GSTIN is verified for B2B compliance (${getStateFromGstin(customerGstin)}).`
+        `Customer GSTIN is structurally verified (${custFormat.stateName}, ${custFormat.panEntityType}).`
       );
+
+      // Check Place of Supply alignment
+      const customerState = invoice.customerState || "";
+      if (customerState && custFormat.stateName && !customerState.toLowerCase().includes(custFormat.stateName.toLowerCase()) && !custFormat.stateName.toLowerCase().includes(customerState.toLowerCase())) {
+        record(
+          "RULE-GST-001C",
+          "Place of Supply & Customer State Alignment",
+          "WARNING",
+          "WARNING",
+          `Customer GSTIN indicates state '${custFormat.stateName}', but invoice Place of Supply is specified as '${customerState}'.`,
+          "Ensure invoice Place of Supply matches the recipient's principal GST registration state to prevent tax levy misclassification."
+        );
+      }
     }
   } else {
     record(

@@ -10,13 +10,62 @@ export interface Business {
   id: string;
   userId: string;
   businessName: string;
+  legalName?: string;
+  tradeName?: string;
   gstin: string;
+  pan?: string;
   businessCategory: string;
   registrationType: string;
+  registrationStatus?: string;
+  registrationDate?: string;
   state: string;
   address: string;
+  principalPlace?: string;
   email: string;
   phone: string;
+  isGstinVerified?: boolean;
+  gstinVerifiedAt?: string;
+  verificationProvider?: string;
+  verificationReference?: string;
+}
+
+export interface GstinVerificationDetails {
+  gstin: string;
+  legalName: string;
+  tradeName?: string;
+  pan: string;
+  registrationStatus: string;
+  registrationDate?: string;
+  taxpayerType: string;
+  state: string;
+  stateCode: string;
+  address: string;
+  principalPlace?: string;
+  jurisdiction?: string;
+  natureOfBusiness?: string;
+  verificationProvider: string;
+  verifiedAt: string;
+  referenceId: string;
+  isLiveApi: boolean;
+}
+
+export interface GstinVerificationResponse {
+  success: boolean;
+  message: string;
+  verification?: GstinVerificationDetails;
+  status?: string;
+  isInactive?: boolean;
+  error?: string;
+  nameCheck?: {
+    isMismatch: boolean;
+    retrievedLegalName?: string;
+    enteredName?: string;
+    mismatchMessage?: string;
+  };
+  alreadyExistsInDatabase?: boolean;
+  existingCompanyMessage?: string | null;
+  currentUserProfileExists?: boolean;
+  currentProfile?: Business | null;
 }
 
 export interface Customer {

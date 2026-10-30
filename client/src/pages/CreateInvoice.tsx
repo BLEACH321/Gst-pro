@@ -4,6 +4,7 @@ import {
   UserCheck,
   PackagePlus,
   ShieldAlert,
+  ShieldCheck,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
@@ -22,7 +23,8 @@ import {
   getCustomers,
   validateInvoicePreview,
   createInvoice,
-  suggestHsnSacApi
+  suggestHsnSacApi,
+  verifyCustomerGstinApi
 } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { Product, Customer, InvoiceItem, ValidationSummaryResponse, HsnSuggestion } from "../types";
@@ -51,6 +53,31 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
   const [customerGstin, setCustomerGstin] = useState("");
   const [customerState, setCustomerState] = useState("Maharashtra");
   const [customerAddress, setCustomerAddress] = useState("");
+  const [isVerifyingCustomer, setIsVerifyingCustomer] = useState(false);
+  const [customerVerificationStatus, setCustomerVerificationStatus] = useState<any>(null);
+  const [customerVerificationError, setCustomerVerificationError] = useState<string | null>(null);
+
+  const handleVerifyCustomerGstin = async () => {
+    if (!customerGstin.trim()) return;
+    setIsVerifyingCustomer(true);
+    setCustomerVerificationError(null);
+    setCustomerVerificationStatus(null);
+    try {
+      const res = await verifyCustomerGstinApi(customerGstin.trim().toUpperCase());
+      if (res.success && res.verification) {
+        setCustomerVerificationStatus(res.verification);
+        if (res.verification.legalName) setCustomerName(res.verification.legalName);
+        if (res.verification.state) setCustomerState(res.verification.state);
+        if (res.verification.address) setCustomerAddress(res.verification.address);
+      } else {
+        setCustomerVerificationError(res.error || "Customer GSTIN could not be verified.");
+      }
+    } catch (err: any) {
+      setCustomerVerificationError(err.message || "Failed to verify customer GSTIN.");
+    } finally {
+      setIsVerifyingCustomer(false);
+    }
+  };
 
   // Step 3: Products / Services
   const [items, setItems] = useState<InvoiceItem[]>([
@@ -213,6 +240,9 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
     customerGstin: customerGstin ? customerGstin.toUpperCase().trim() : null,
     customerState,
     customerAddress,
+    customerGstinVerified: Boolean(customerVerificationStatus),
+    customerGstinStatus: customerVerificationStatus?.registrationStatus || "ACTIVE",
+    supplierGstinVerified: Boolean(business?.isGstinVerified),
     subtotal,
     discount: totalDiscount,
     taxableAmount,
@@ -372,21 +402,40 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
                 />
               </div>
 
-              <div className="md:col-span-2 p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Supplier Entity
-                  </span>
-                  <p className="text-xs font-bold text-white mt-0.5">
-                    {business?.businessName || "Gupta Enterprise Infotech Pvt Ltd"}
+              <div className="md:col-span-2 p-4 sm:p-5 rounded-2xl bg-black/40 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                      Supplier Company Profile
+                    </span>
+                    {business?.isGstinVerified ? (
+                      <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30">
+                        <CheckCircle2 className="w-2.5 h-2.5" />
+                        GSTIN Verified Active
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                        Unverified Profile
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm font-black text-white">
+                    {business?.legalName || business?.businessName || "Bathkart & Tech Solutions Pvt Ltd"}
                   </p>
-                  <p className="text-[11px] font-mono text-cyan-400">
-                    GSTIN: {business?.gstin || "27AABCG1234F1Z5"} ({business?.state || "Maharashtra"})
+                  <p className="text-xs font-mono text-[#00E599] font-bold">
+                    GSTIN: {business?.gstin || "27AABCB9876F1Z2"} • State: {business?.state || "Maharashtra"}
+                  </p>
+                  <p className="text-[11px] text-zinc-400 font-sans">
+                    {business?.address || "Commercial Hub, MIDC Andheri East, Mumbai"}
                   </p>
                 </div>
-                <span className="text-xs font-bold px-3 py-1 bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 rounded-full">
-                  ✓ Origin Verified
-                </span>
+                <button
+                  type="button"
+                  onClick={() => onNavigateTab("business")}
+                  className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/15 text-white border border-white/10 text-xs font-bold transition-all cursor-pointer shrink-0"
+                >
+                  Verify / Edit Company Profile
+                </button>
               </div>
             </div>
 
@@ -467,16 +516,58 @@ export const CreateInvoice: React.FC<CreateInvoiceProps> = ({ onNavigateTab, ini
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1.5">
-                  Customer GSTIN (Leave empty for Unregistered B2C)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 27AABCA5566G1Z9"
-                  value={customerGstin}
-                  onChange={(e) => setCustomerGstin(e.target.value.toUpperCase())}
-                  className="w-full px-4 py-2.5 text-xs font-mono font-bold uppercase rounded-xl border border-slate-700 bg-slate-950 text-white focus:border-cyan-500 focus:outline-hidden"
-                />
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-slate-300">
+                    Customer GSTIN (B2B Taxpayer)
+                  </label>
+                  {customerVerificationStatus && (
+                    <span className="text-[10px] font-mono font-bold text-[#00E599] flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-[#00E599]" />
+                      Verified {customerVerificationStatus.registrationStatus}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    maxLength={15}
+                    placeholder="e.g. 27AAPFU0939F1ZV"
+                    value={customerGstin}
+                    onChange={(e) => {
+                      setCustomerGstin(e.target.value.toUpperCase());
+                      setCustomerVerificationStatus(null);
+                      setCustomerVerificationError(null);
+                    }}
+                    className="flex-1 px-4 py-2.5 text-xs font-mono font-bold uppercase rounded-xl border border-slate-700 bg-slate-950 text-white focus:border-cyan-500 focus:outline-hidden tracking-wider"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyCustomerGstin}
+                    disabled={isVerifyingCustomer || !customerGstin.trim()}
+                    className="px-3.5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm"
+                  >
+                    {isVerifyingCustomer ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                    )}
+                    <span>Verify</span>
+                  </button>
+                </div>
+                {customerVerificationError && (
+                  <p className="text-[11px] text-rose-400 mt-1.5 font-medium flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{customerVerificationError}</span>
+                  </p>
+                )}
+                {customerVerificationStatus && (
+                  <div className="p-2.5 rounded-xl bg-[#00E599]/10 border border-[#00E599]/30 mt-2 text-[11px] text-zinc-300 font-mono">
+                    <p className="text-white font-bold">{customerVerificationStatus.legalName}</p>
+                    <p className="text-[#00E599] mt-0.5">
+                      State: {customerVerificationStatus.state} • PAN: {customerVerificationStatus.pan}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>

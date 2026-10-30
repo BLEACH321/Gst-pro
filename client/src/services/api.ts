@@ -59,6 +59,33 @@ export async function getBusinessProfile(): Promise<Business> {
   return handleResponse(res);
 }
 
+export async function verifyGstinApi(gstin: string, enteredBusinessName?: string) {
+  const res = await fetch(`${API_BASE}/business/verify-gstin`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({ gstin, enteredBusinessName })
+  });
+  return handleResponse(res);
+}
+
+export async function confirmBusinessProfileApi(data: Partial<Business>): Promise<{ message: string; business: Business }> {
+  const res = await fetch(`${API_BASE}/business/confirm-profile`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+}
+
+export async function verifyCustomerGstinApi(gstin: string) {
+  const res = await fetch(`${API_BASE}/customers/verify-gstin`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({ gstin })
+  });
+  return handleResponse(res);
+}
+
 export async function updateBusinessProfile(data: Partial<Business>): Promise<{ message: string; business: Business }> {
   const res = await fetch(`${API_BASE}/business`, {
     method: "PUT",

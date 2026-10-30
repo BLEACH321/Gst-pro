@@ -24,21 +24,31 @@ model User {
 }
 
 model Business {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  businessName     String
-  gstin            String
-  businessCategory String
-  registrationType String   @default("Regular")
-  state            String
-  address          String
-  email            String
-  phone            String
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName          String
+  legalName             String?
+  tradeName             String?
+  gstin                 String
+  pan                   String?
+  businessCategory      String
+  registrationType      String    @default("Regular")
+  registrationStatus    String    @default("ACTIVE") // ACTIVE, CANCELLED, INACTIVE, SUSPENDED
+  registrationDate      String?
+  state                 String
+  address               String
+  principalPlace        String?
+  email                 String
+  phone                 String
+  isGstinVerified       Boolean   @default(false)
+  gstinVerifiedAt       DateTime?
+  verificationProvider  String?
+  verificationReference String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  invoices         Invoice[]
+  invoices              Invoice[]
 }
 
 model Customer {
@@ -91,12 +101,15 @@ model Invoice {
   totalGst        Float
   grandTotal      Float
   
-  status          String   @default("DRAFT") // DRAFT, VALIDATED, FINALIZED, CANCELLED
-  riskLevel       String   @default("VALID") // VALID, WARNING, POTENTIAL_RISK
-  riskScore       Float    @default(0)
-  isInterState    Boolean  @default(false)
+  status                String   @default("DRAFT") // DRAFT, VALIDATED, FINALIZED, CANCELLED
+  riskLevel             String   @default("VALID") // VALID, WARNING, POTENTIAL_RISK
+  riskScore             Float    @default(0)
+  isInterState          Boolean  @default(false)
+  supplierGstinVerified Boolean? @default(false)
+  customerGstinVerified Boolean? @default(false)
+  customerGstinStatus   String?  @default("ACTIVE")
   
-  createdAt       DateTime @default(now())
+  createdAt             DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   items           InvoiceItem[]

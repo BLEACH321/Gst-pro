@@ -20,7 +20,10 @@ router.post("/validate-preview", authMiddleware, async (req, res) => {
     const enrichedInvoice = {
       ...invoiceData,
       supplierGstin: business?.gstin || "27ABCDE1234F1Z5",
-      supplierState: business?.state || "Maharashtra"
+      supplierState: business?.state || "Maharashtra",
+      supplierLegalName: business?.legalName || business?.businessName || "",
+      supplierGstinVerified: business?.isGstinVerified || false,
+      supplierRegistrationStatus: business?.registrationStatus || "ACTIVE"
     };
 
     // 1. Run Deterministic GST Rule Engine
@@ -161,7 +164,10 @@ router.post("/", authMiddleware, async (req, res) => {
     const enrichedInvoice = {
       ...req.body,
       supplierGstin: business?.gstin || "27ABCDE1234F1Z5",
-      supplierState: business?.state || "Maharashtra"
+      supplierState: business?.state || "Maharashtra",
+      supplierLegalName: business?.legalName || business?.businessName || "",
+      supplierGstinVerified: business?.isGstinVerified || false,
+      supplierRegistrationStatus: business?.registrationStatus || "ACTIVE"
     };
 
     // 1. Run Rule Engine
@@ -201,6 +207,9 @@ router.post("/", authMiddleware, async (req, res) => {
         riskLevel: overallRiskLevel,
         riskScore: Number(aiEvaluation.riskScore) || 0,
         isInterState: Boolean(isInterState),
+        supplierGstinVerified: Boolean(business?.isGstinVerified),
+        customerGstinVerified: Boolean(req.body.customerGstinVerified),
+        customerGstinStatus: req.body.customerGstinStatus || "ACTIVE",
         items: {
           create: (items || []).map((it) => ({
             productId: it.productId || null,
